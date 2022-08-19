@@ -67,17 +67,17 @@ export default function CreatePost({ currentLoggedInUser }) {
         <div className='relative z-10 mt-12 p-6 w-[80%] md:w-[80%] lg:w-[40%] h-[60vh]  flex flex-col justify-start md:justify-center items-start md:items-center'>
             {showPostEditModal ? <EditPost feed={feed}  setFeed={setFeed} showPostToBeEdited={showPostToBeEdited} setShowPostEditModal={setShowPostEditModal}   /> : ""}
             <form className="flex flex-col space-y-2 w-full p-8 border-b-4 border-gray-300" onSubmit={(e) => handleSubmit(e)}>
-                <span className="flex-shrink-0 w-12 h-12 flex justify-center items-center bg-blue-500 rounded-full text-white">{localStorage.getItem("loggedIn")}</span>
+                <span className="flex-shrink-0 w-12 h-12 flex justify-center items-center bg-blue-500 rounded-full text-white">{localStorage.getItem("loggedIn")[0]}</span>
                 <div className="flex flex-col flex-grow ml-4">
                     <input type="text" className="p-3 bg-transparent border border-gray-500 rounded-sm" name="post-content" rows="3" value={postContent} placeholder="What's happening?" onChange={(e) => setPostContent(e.target.value)} />
                     <div className="flex justify-end mt-2">
 
-                        <button type="submit" className="flex items-center h-8 px-3 text-xs rounded-sm text-white bg-blue-500 hover:opacity-90">Tweet</button>
+                        <button type="submit" className={`flex items-center h-8 px-3 text-xs rounded-sm text-white ${!postContent ? 'disabled' : " bg-blue-500 hover:opacity-90"}`}>Tweet</button>
                     </div>
                 </div>
             </form>
             {feed && feed.map(post => <div key={post.postID} className="flex w-full p-8 border-b border-gray-300">
-                <span className="flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex justify-center items-center text-white">{post.postAuthor}</span>
+                <span className="flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex justify-center items-center text-white">{post.postAuthor[0]}</span>
                 <div className="flex flex-col flex-grow ml-4">
                     <div className="flex">
                         <span className="font-semibold">{post.postAuthor}</span>

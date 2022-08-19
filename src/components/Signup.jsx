@@ -8,44 +8,36 @@ export default function Signup({ error, setError, setUserLoggedIn, userLoggedIn,
     const [password, setPassword] = useState("");
     const [currUser, setCurrUser] = useState(null);
     const [userExist, setUserExist] = useState(null);
-    const [userNameValid, setUserNameValid] = useState(null);
 
-    const [passwordValid, setPasswordValid] = useState(false);
 
-    const isValid = () => {
-         var regEx = /^[0-9a-zA-Z]+$/;
-      let userNameError =   !userName ? "username cannot be empty" : userName.length < 4 ? "username should be atlest 4 characters" : userName.match(regEx) ? "valid userName " : "userName should be alphNumeric";
 
-      if(userNameError){
-          return userNameError;
-      }else {
-          return setUserName(userName);
-        //   setUserNameValid(userName)
-          
-      }
-    }
 
     const handleSignUp = (e) => {
 
         e.preventDefault();
-        if(!isValid) return 
+        // if(!isValid) return 
         // const {userName,password} =e.target.elements;
         // (userName.length == 0 && password.length == 0) ? setError("fields cannot be empty") : "";
-        console.log(userName.value, password.value, "user");
+        console.log(userName, password, "user");
 
         let allUsersArrTemp = JSON.parse(localStorage.getItem("allUsers")) || [];
         console.log(allUsersArrTemp, "Temparr")
         let filteredArr = allUsersArrTemp.filter(user => userName == user.userName)
         if (allUsersArrTemp.length == 0 || filteredArr.length == 0) {
-            setUserLoggedIn(true);
-            setCurrUser({ userName, password });
-            localStorage.setItem("allUsers", JSON.stringify([...userArray, { userName, password }]));
-            localStorage.setItem("loggedIn", userName);
-            setUserArray([...userArray, { userName, password }]);
-            console.log(userLoggedIn);
 
-            navigate("/dashboard", { replace: true });
-        } else if (allUsersArrTemp.filter(user => user.userName == currUser)) { console.log("exists"); setUserExist(true) }
+            console.log(password, "how it is rendering")
+            if (password.length !== 0 && password.length >= 6) {
+
+                setUserLoggedIn(true);
+                setCurrUser({ userName, password });
+                localStorage.setItem("allUsers", JSON.stringify([...userArray, { userName, password }]));
+                localStorage.setItem("loggedIn", userName);
+                setUserArray([...userArray, { userName, password }]);
+                // console.log(userLoggedIn);
+                navigate("/dashboard", { replace: true });
+            }
+
+        } else if (allUsersArrTemp?.filter(user => user.userName == currUser)) { console.log("exists"); setUserExist(true) }
     }
 
 
@@ -74,7 +66,7 @@ export default function Signup({ error, setError, setUserLoggedIn, userLoggedIn,
                                     className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5"
                                 >
                                     <p className="text-center font-semibold mx-4 mb-0">Sign Up</p>
-                                    
+
                                 </div>
 
                                 <div className="mb-6">
@@ -82,10 +74,10 @@ export default function Signup({ error, setError, setUserLoggedIn, userLoggedIn,
                                         type="text"
                                         className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                         id="userName"
-                                        placeholder="User Name"
-                                        onChange={(e) => isValid(e.target.value)}
+                                        placeholder="Enter your Name"
+                                        onChange={(e) => setUserName(e.target.value)}
                                     />
-                                    <small>{() => isValid()}</small>
+                                    <small className="text-red-600">{!userName ? "* name cannot be empty" : userName.length < 4 ? "* name should be minimum 4 letters" : ""}</small>
                                 </div>
 
                                 <div className="mb-6">
@@ -97,14 +89,15 @@ export default function Signup({ error, setError, setUserLoggedIn, userLoggedIn,
                                         onChange={(e) => setPassword(e.target.value)}
 
                                     />
-                                    
+                                    <small className="text-red-600">{!password ? "* password cannot be empty" : password.length < 6 ? "* password should be minimum 6 characters" : ""}</small>
                                 </div>
 
 
+                                <small className="text-red-600 text-lg mb-2">{userExist ? "User Exists! Try with another name" : ""}</small>
                                 <div className="text-center lg:text-left">
                                     <button
                                         type="submit"
-                                        className={`inline-block px-7 py-3  text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:cursor-pointer hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out ${!userName && !password ? 'disabled:opacity-20 bg-gray-600' : "bg-blue-600"}`}
+                                        className={`inline-block px-7 py-3  text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:cursor-pointer hover:shadow-lg   transition duration-150 ease-in-out ${userName.length < 4 && password.length < 6 ? ' disabled:opacity-20 bg-gray-600' : "bg-blue-600"}`}
 
                                     >
                                         Sign Up

@@ -17,16 +17,20 @@ function Login({error,setError,userLoggenIn,setUserLoggedIn,currentLoggedInUser,
       let userExists =   JSON.parse(checkUserTaken).filter(user => user.userName.toLowerCase() == userName.toLowerCase());
       console.log(userExists,"userExists")
         
-        if(userExists.length >0){
+        if(userExists.length >0 ){
             
             localStorage.setItem("loggedIn" ,(userExists[0].userName) );
+            if(password == userExists[0].password){
             setUserLoggedIn(true)
             setCurrentLoggedInUser({userName});
             console.log("should redirect");
+
             navigate("/dashboard",{replace:true});
+            }
         } else {
             setError("user doesn't exist.Sign up")
-            navigate("/register",{replace:true});
+        navigate("/register",{replace:true}) ;
+            
         }
         // if not present show error and redirect to sign up
 
@@ -46,15 +50,16 @@ function Login({error,setError,userLoggenIn,setUserLoggedIn,currentLoggedInUser,
                             />
                         </div>
                         <div className="md:w-8/12 lg:w-5/12 lg:ml-20">
-                            <form onSubmit={(e) => handleLogin(e)}>
+                        
+                            <form onSubmit={(e) => handleLogin(e) }>
                                 <div className="mb-6">
                                     <input
                                         type="text"
                                         className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                        placeholder="User Name"
+                                        placeholder="Enter your Name"
                                         onChange={(e) => setUserName(e.target.value)}
                                     />
-                                    <small></small>
+                                    <small className="text-black">{!userName ? "* name cannot be empty" : userName.length <4 ? "* name should be minimum 4 letters" : ""}</small>
                                 </div>
 
                                 <div className="mb-6">
@@ -65,12 +70,13 @@ function Login({error,setError,userLoggenIn,setUserLoggedIn,currentLoggedInUser,
                                         onChange={(e) => setPassword(e.target.value)}
 
                                     />
+                                    <small className="text-black">{!password ? "* password cannot be empty" : password.length <6 ? "* password should be minimum 6 characters" : ""}</small>
                                 </div>
 
                                 <small>{userNameError ? userNameError : ""}</small>
                                 <button
                                     type="submit"
-                                    className="inline-block px-7 py-3 bg-[#3B82F6] text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+                                    className={`inline-block px-7 py-3 w-full text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:cursor-pointer hover:shadow-lg   transition duration-150 ease-in-out ${ userName.length >=4  && password.length >=6 ? "bg-blue-600" :'disabled:opacity-20 bg-gray-600'  }`}
                                     data-mdb-ripple="true"
                                     data-mdb-ripple-color="light"
                                 >
